@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: movies
 spec:
-  replicas: 10
+  replicas: 2
   selector:
     matchLabels:
       app: movies
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: movies
-        image: finovsk/rotten-potatoes:v2
+        image: finovsk/rotten-potatoes
         ports:
         - containerPort: 5000
         env:
@@ -28,6 +28,13 @@ spec:
             value: mongouser
           - name: MONGODB_PASSWORD
             value: mongopwd
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "32Mi"
+          limits:
+            cpu: "400m"
+            memory: "64Mi"
 
 ---
 
@@ -41,5 +48,5 @@ spec:
   ports:
   - port: 80
     targetPort: 5000
-    nodePort: 30000 
-  type: NodePort
+    nodePort: 30000
+  type: LoadBalancer
